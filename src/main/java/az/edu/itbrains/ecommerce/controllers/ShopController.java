@@ -65,4 +65,10 @@ public class ShopController {
         basketService.removeFromBasket(id, principal.getName());
         return "redirect:/basket";
     }
+
+
+    @GetMapping("/checkout")
+    public String checkout(){
+        return "/shop/checkout";
+    }
 }

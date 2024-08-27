@@ -24,4 +24,8 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<Basket> baskets;
+
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 }
