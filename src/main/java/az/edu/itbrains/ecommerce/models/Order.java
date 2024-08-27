@@ -20,14 +20,12 @@ public class Order {
     private Long id;
     @ManyToOne
     private UserEntity user;
-
     private Date orderDate;
-
+    private String address;
+    private String phoneNumber;
+    private String message;
     private OrderStatus orderStatus;
-
     private PaymentStatus paymentStatus;
-
-
     @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
 }

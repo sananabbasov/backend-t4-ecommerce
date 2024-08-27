@@ -83,8 +83,8 @@
               </tbody>
             </table>
             <div class="cart-buttons">
-              <a href="cart.html" class="boxed-btn">Update Cart</a>
-              <a href="/checkout" class="boxed-btn black">Check Out</a>
+              <a href="/" class="boxed-btn">Update Cart</a>
+                <a th:href="${active} ? '/checkout' : '#'" class="boxed-btn white">Check Out</a>
             </div>
           </div>
 

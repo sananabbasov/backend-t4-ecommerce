@@ -1,5 +1,6 @@
 package az.edu.itbrains.ecommerce.services.impls;
 
+import az.edu.itbrains.ecommerce.dtos.order.PlaceOrderDto;
 import az.edu.itbrains.ecommerce.enums.OrderStatus;
 import az.edu.itbrains.ecommerce.enums.PaymentStatus;
 import az.edu.itbrains.ecommerce.models.Basket;
@@ -38,11 +39,14 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public boolean checkout(String userEmail) {
+    public boolean checkout(String userEmail, PlaceOrderDto placeOrderDto) {
         try {
             UserEntity findUser = userRepository.findByEmail(userEmail);
             List<Basket> userBasket = findUser.getBaskets();
             Order order = new Order();
+            order.setAddress(placeOrderDto.getAddress());
+            order.setMessage(placeOrderDto.getMessage());
+            order.setPhoneNumber(placeOrderDto.getPhoneNumber());
             order.setUser(findUser);
             order.setOrderDate(new Date());
             order.setOrderStatus(OrderStatus.PENDING);
@@ -59,6 +63,7 @@ public class OrderServiceImpl implements OrderService {
                 orderItemRepository.save(orderItem);
             }
 
+            basketRepository.deleteAll(userBasket);
             return true;
         }catch (Exception e){
             return false;
