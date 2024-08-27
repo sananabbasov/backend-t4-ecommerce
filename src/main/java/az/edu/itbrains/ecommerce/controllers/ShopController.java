@@ -1,10 +1,12 @@
 package az.edu.itbrains.ecommerce.controllers;
 
 import az.edu.itbrains.ecommerce.dtos.basket.BasketAddDto;
+import az.edu.itbrains.ecommerce.dtos.order.PlaceOrderDto;
 import az.edu.itbrains.ecommerce.dtos.product.ProductDetailDto;
 import az.edu.itbrains.ecommerce.dtos.product.ProductRelatedDto;
 import az.edu.itbrains.ecommerce.dtos.user.UserBasketDto;
 import az.edu.itbrains.ecommerce.services.BasketService;
+import az.edu.itbrains.ecommerce.services.OrderService;
 import az.edu.itbrains.ecommerce.services.ProductService;
 import az.edu.itbrains.ecommerce.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -22,11 +24,13 @@ public class ShopController {
     private final ProductService productService;
     private final BasketService basketService;
     private final UserService userService;
+    private final OrderService orderService;
 
-    public ShopController(ProductService productService, BasketService basketService, UserService userService) {
+    public ShopController(ProductService productService, BasketService basketService, UserService userService, OrderService orderService) {
         this.productService = productService;
         this.basketService = basketService;
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/shop")
@@ -48,6 +52,11 @@ public class ShopController {
     public String basket(Model model, Principal principal){
         UserBasketDto userBasket = userService.getUserBasket(principal.getName());
         model.addAttribute("basket", userBasket);
+        boolean active = true;
+        if (userBasket.getTotal() == 0){
+            active = false;
+        }
+        model.addAttribute("active",active);
         return "/shop/basket";
 
     }
@@ -56,6 +65,8 @@ public class ShopController {
     @PostMapping("/basket")
     public String basket(BasketAddDto basketAddDto, Principal principal){
         basketService.addToBasket(basketAddDto,principal.getName());
+
+
         return "redirect:/basket";
     }
 
@@ -68,7 +79,23 @@ public class ShopController {
 
 
     @GetMapping("/checkout")
-    public String checkout(){
+    public String checkout(Principal principal, Model model){
+        UserBasketDto userBasket = userService.getUserBasket(principal.getName());
+        if (userBasket.getTotal() == 0){
+            return "redirect:/basket";
+        }
+        model.addAttribute("basket",userBasket);
         return "/shop/checkout";
+    }
+
+
+    @PostMapping("/checkout")
+    public String checkout(PlaceOrderDto placeOrderDto, Principal principal){
+        UserBasketDto userBasket = userService.getUserBasket(principal.getName());
+        if (userBasket.getTotal() == 0){
+            return "redirect:/basket";
+        }
+        orderService.checkout(principal.getName(), placeOrderDto);
+        return "redirect:/";
     }
 }

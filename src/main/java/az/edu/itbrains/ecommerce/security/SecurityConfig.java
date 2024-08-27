@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         c ->c
                                 .requestMatchers("/basket").authenticated()
+                                .requestMatchers("/checkout").authenticated()
+//                                .requestMatchers("/admin/**").authenticated()
                                 .anyRequest().permitAll()
                 )
                 .formLogin(f -> f

@@ -46,10 +46,11 @@
                                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                                     <div class="card-body">
                                         <div class="billing-address-form">
-                                            <form action="index.html">
-                                                <p><input type="text" placeholder="Address"></p>
-                                                <p><input type="tel" placeholder="Phone"></p>
-                                                <p><textarea name="bill" id="bill" placeholder="Say Something"></textarea></p>
+                                            <form method="post">
+                                                <p><input name="address" type="text" placeholder="Address"></p>
+                                                <p><input name="phoneNumber" type="tel" placeholder="Phone"></p>
+                                                <p><textarea name="message" id="bill" placeholder="Say Something"></textarea></p>
+                                                <p><button type="submit" class="boxed-btn">Submit</button></p>
                                             </form>
                                         </div>
                                     </div>
@@ -106,35 +107,28 @@
                                 <td>Product</td>
                                 <td>Total</td>
                             </tr>
-                            <tr>
-                                <td>Strawberry</td>
-                                <td>$85.00</td>
+                            <tr th:each="product : ${basket.products}">
+                                <td th:text="${product.name}">Strawberry</td>
+                                <td th:text="${product.price}">$85.00</td>
                             </tr>
-                            <tr>
-                                <td>Berry</td>
-                                <td>$70.00</td>
-                            </tr>
-                            <tr>
-                                <td>Lemon</td>
-                                <td>$35.00</td>
-                            </tr>
+
                             </tbody>
                             <tbody class="checkout-details">
                             <tr>
                                 <td>Subtotal</td>
-                                <td>$190</td>
+                                <td th:text="${basket.subtotal}">$190</td>
                             </tr>
                             <tr>
                                 <td>Shipping</td>
-                                <td>$50</td>
+                                <td th:text="${basket.shipping}">$50</td>
                             </tr>
                             <tr>
                                 <td>Total</td>
-                                <td>$240</td>
+                                <td th:text="${basket.total}">$240</td>
                             </tr>
                             </tbody>
                         </table>
-                        <a href="#" class="boxed-btn">Place Order</a>
+<!--                        <a href="#" class="boxed-btn">Place Order</a>-->
                     </div>
                 </div>
             </div>
