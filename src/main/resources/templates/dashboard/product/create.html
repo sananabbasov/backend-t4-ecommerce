@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/dashboard/layout}"
+        lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+  <form method="post" action="/admin/product/create">
+    <input type="text" name="name"  placeholder="name" /> <br>
+    <input type="number" name="price" placeholder="price" /><br>
+    <input type="text" name="image" placeholder="image" /><br>
+    <input type="text" name="description" placeholder="description" /><br>
+    <input type="number" name="discountPrice" placeholder="discountPrice" /><br>
+    <input type="date" name="discountDate" placeholder="discountDate" /><br>
+    <input type="checkbox" name="featured" /><br>
+    <select name="categoryId">
+      <option th:value="${category.id}" th:each="category : ${categories}" th:text="${category.name}"></option>
+    </select>
+    <input type="submit" value="create" />
+  </form>
+</section>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/dashboard/layout}"
+        lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+  <form method="post" action="/admin/product/create">
+    <input type="text" th:value="${product.name}" name="name"  placeholder="name" /> <br>
+    <input type="number"  th:value="${product.price}" name="price" placeholder="price" /><br>
+    <input type="text"  th:value="${product.image}" name="image" placeholder="image" /><br>
+    <textarea type="text" th:text="${product.description}" name="description" placeholder="description" /></textarea><br>
+    <input type="number" th:value="${product.discountPrice}" name="discountPrice" placeholder="discountPrice" /><br>
+    <input type="date"  th:value="${#dates.format(product.discountDate, 'yyyy-MM-dd')}" name="discountDate" placeholder="discountDate" /><br>
+    <input type="checkbox" th:value="${product.featured}" name="featured" /><br>
+    <select name="categoryId">
+      <option th:value="${category.id}" th:if="${category.id == 3 : 'selected'}" th:each="category : ${categories}" th:text="${category.name}"></option>
+    </select>
+    <input type="submit" value="create" />
+  </form>
+</section>
+</body>
+</html>

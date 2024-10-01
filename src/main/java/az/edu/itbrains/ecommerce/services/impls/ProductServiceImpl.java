@@ -1,17 +1,19 @@
 package az.edu.itbrains.ecommerce.services.impls;
 
-import az.edu.itbrains.ecommerce.dtos.category.CategoryDto;
-import az.edu.itbrains.ecommerce.dtos.product.ProductDealDto;
-import az.edu.itbrains.ecommerce.dtos.product.ProductDetailDto;
-import az.edu.itbrains.ecommerce.dtos.product.ProductRelatedDto;
+import az.edu.itbrains.ecommerce.dtos.product.*;
+import az.edu.itbrains.ecommerce.models.Category;
 import az.edu.itbrains.ecommerce.models.Product;
+import az.edu.itbrains.ecommerce.payloads.PaginationPayload;
 import az.edu.itbrains.ecommerce.repositories.ProductRepository;
+import az.edu.itbrains.ecommerce.services.CategoryService;
 import az.edu.itbrains.ecommerce.services.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,22 +21,24 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
     private final ModelMapper modelMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService, ModelMapper modelMapper) {
         this.productRepository = productRepository;
+        this.categoryService = categoryService;
         this.modelMapper = modelMapper;
     }
 
     @Override
     public List<Product> getHomeProducts() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findByDeletedFalse();
         return products;
     }
 
     @Override
     public ProductDetailDto getById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findByIdAndDeletedFalse(id).orElseThrow();
         ProductDetailDto productDetail = modelMapper.map(product,ProductDetailDto.class);
         return productDetail;
     }
@@ -59,5 +63,50 @@ public class ProductServiceImpl implements ProductService {
         double percent = (product.getDiscountPrice() * 100) / product.getPrice();
         dealDto.setDiscountPercent(Math.ceil(percent));
         return dealDto;
+    }
+
+    @Override
+    public PaginationPayload<ProductDashboardDto> getDashboardProducts(Integer pageNumber) {
+
+        pageNumber = pageNumber == null ? 1 : pageNumber;
+        Pageable pageable = PageRequest.of(pageNumber-1,10,Sort.by("id"));
+        Page<Product> products = productRepository.findByDeletedFalse(pageable);
+
+        PaginationPayload paginationPayload = new PaginationPayload();
+        paginationPayload.setTotalPage(products.getTotalPages());
+        paginationPayload.setData(products.getContent());
+
+        return paginationPayload;
+    }
+
+    @Override
+    public boolean createProduct(ProductCreateDto productCreateDto) {
+        try {
+            Product product = modelMapper.map(productCreateDto, Product.class);
+            Category findCategory = categoryService.getCategoryById(productCreateDto.getCategoryId());
+            if (findCategory == null){
+                return false;
+            }
+            product.setCategory(findCategory);
+            productRepository.save(product);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public ProductUpdateDto getUpdatedProduct(Long id) {
+        Product findProduct = productRepository.findByIdAndDeletedFalse(id).orElseThrow();
+        ProductUpdateDto product = modelMapper.map(findProduct, ProductUpdateDto.class);
+        return product;
+    }
+
+    @Override
+    public boolean removeProduct(Long id) {
+        Product findProduct = productRepository.findByIdAndDeletedFalse(id).orElseThrow();
+        findProduct.setDeleted(true);
+        productRepository.save(findProduct);
+        return true;
     }
 }

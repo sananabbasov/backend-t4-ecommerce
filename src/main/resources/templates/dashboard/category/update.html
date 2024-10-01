@@ -11,7 +11,10 @@
 <body>
 
 <section layout:fragment="content">
-  Hello from category
+  <form method="post">
+    <input type="text" name="name" th:value="${category.name}" />
+    <input type="submit" value="update" />
+  </form>
 </section>
 </body>
 </html>

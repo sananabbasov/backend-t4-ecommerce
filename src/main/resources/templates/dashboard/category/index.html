@@ -11,7 +11,25 @@
 <body>
 
 <section layout:fragment="content">
-Hello from category
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category : ${categories}">
+            <th th:text="${category.id}" scope="row">1</th>
+            <td th:text="${category.name}">Mark</td>
+            <td>
+                <a th:href="'/admin/category/update/'+${category.id}">Update</a>
+                <a href="/admin/category/delete/1">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </section>
 </body>
 </html>

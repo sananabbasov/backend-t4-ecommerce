@@ -22,6 +22,7 @@ public class Product {
     private Double discountPrice;
     private Date discountDate;
     private Boolean featured;
+    private Boolean deleted;
     @ManyToOne
     private Category category;
 }
