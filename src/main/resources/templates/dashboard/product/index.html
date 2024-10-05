@@ -14,6 +14,8 @@
 
 <section layout:fragment="content">
     <a href="/admin/product/create" class="btn btn-success">Create</a>
+    <img src="/uploads/97545e7c-aff6-41c6-a9b7-6505b4dcad59_beach-9027513_1280.webp" alt="Image" />
+
     <table class="table table-striped">
         <thead>
         <tr>
@@ -30,7 +32,7 @@
             <th th:text="${product.id}" scope="row">1</th>
             <td th:text="${product.name}">Mark</td>
             <td th:text="${product.price}">Mark</td>
-            <td>Mark</td>
+            <td> <img width="100" th:src="${product.image}" /></td>
             <td th:text="${product.category.name}">Mark</td>
             <td>
                 <a th:href="'/admin/product/update/'+${product.id}">Update</a>

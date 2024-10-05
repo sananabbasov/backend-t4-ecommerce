@@ -11,10 +11,10 @@
 <body>
 
 <section layout:fragment="content">
-  <form method="post" action="/admin/product/create">
+  <form method="post" action="/admin/product/create" enctype="multipart/form-data">
     <input type="text" name="name"  placeholder="name" /> <br>
     <input type="number" name="price" placeholder="price" /><br>
-    <input type="text" name="image" placeholder="image" /><br>
+    <input type="file" name="file" placeholder="image" /><br>
     <input type="text" name="description" placeholder="description" /><br>
     <input type="number" name="discountPrice" placeholder="discountPrice" /><br>
     <input type="date" name="discountDate" placeholder="discountDate" /><br>

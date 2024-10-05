@@ -8,12 +8,17 @@ import az.edu.itbrains.ecommerce.repositories.ProductRepository;
 import az.edu.itbrains.ecommerce.services.CategoryService;
 import az.edu.itbrains.ecommerce.services.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +28,9 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final ModelMapper modelMapper;
+
+    @Value("${spring.image}")
+    private String path;
 
     public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService, ModelMapper modelMapper) {
         this.productRepository = productRepository;
@@ -108,5 +116,11 @@ public class ProductServiceImpl implements ProductService {
         findProduct.setDeleted(true);
         productRepository.save(findProduct);
         return true;
+    }
+
+    public InputStream getResource(String path, String fileName) throws FileNotFoundException {
+        String fullPath = path+ File.separator + fileName;
+        InputStream is = new FileInputStream(fullPath);
+        return is;
     }
 }
